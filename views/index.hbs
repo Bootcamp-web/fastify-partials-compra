@@ -1,1 +1,8 @@
 <h1>{{title}}</h1>
+<ul>
+    {{#each list}}
+    <li>Productos:{{this.ingrediente}}, Cantidad:{{this.cantidad}}</li>
+    {{/each}}
+</ul>
+
+<a href="/list/add">Añadir</a>
