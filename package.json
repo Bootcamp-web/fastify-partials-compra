@@ -1,0 +1,26 @@
+{
+  "name": "fastify-partials-compra",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:Bootcamp-web/fastify-partials-compra.git",
+  "author": "Patricia Carrasco <patri.carrasco@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "start": "node ./src/app.ts",
+    "dev": "ts-node-dev ./src/server.ts",
+    "build": "tsc"
+  },
+  "dependencies": {
+    "@types/node": "^17.0.8",
+    "fastify": "^3.25.3",
+    "fastify-formbody": "^5.2.0",
+    "fastify-static": "^4.5.0",
+    "handlebars": "^4.7.7",
+    "nodemon": "^2.0.15",
+    "pino": "^7.6.3",
+    "pino-pretty": "^7.3.0",
+    "point-of-view": "^5.0.0",
+    "ts-node-dev": "^1.1.8",
+    "typescript": "^4.5.4"
+  }
+}
