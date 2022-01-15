@@ -1,8 +1,25 @@
 <h1>{{title}}</h1>
 <ul>
     {{#each list}}
-    <li>Productos:{{this.ingrediente}}, Cantidad:{{this.cantidad}}</li>
+        {{#with this}}
+            <li>Productos: {{ ingrediente }}. Cantidad: {{ cantidad }} -  
+            <a href="/remove?id={{id}}">Delete</a>
+            </li>
+        {{/with}}
+   
     {{/each}}
 </ul>
 
 <a href="/list/add">Añadir</a>
+
+{{#if list.length}} 
+    <h2>Theres are {{list.length}} in the list</h2>
+   <div>
+       <h3>The most important is</h3>
+        <li>Productos: {{ list.0.ingrediente }}. 
+            Cantidad: {{ list.0.cantidad }}
+            
+        </li>
+     
+   </div>
+{{/if}}
