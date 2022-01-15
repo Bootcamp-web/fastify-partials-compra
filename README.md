@@ -1,6 +1,15 @@
 # fastify-partials-compra
-14. [Guardar el resultado en un archivo json con fs-extra](#schema14)
-
+1. [Instalar Yarn ](#schema1)
+2. [Arrancar yarn ](#schema2)
+3. [Instalar los paquetes necesarios ](#schema3)
+1. [Añadir el script para que compile Typescript y ejecutarlo ](#schema4)
+1. [Añadimos el server](#schema5)
+1. [Creamos app ](#schema6)
+1. [Creamos main_router ](#schema7)
+1. [Creamos index.hbs y main.hbs ](#schema8)
+1. [Creamos add.hbs  ](#schema9)
+1. [Añadimos la funcionalidad `remove ingredient` ](#schema10)
+1. [Utilizamos `#with`de hadnlebars](#schema11)
 <hr>
 
 <a name="schema1"></a>
@@ -46,6 +55,10 @@ yarn add fastify pino pino-pretty nodemon fastify-static handlebars point-of-vie
 yarn build tsc --init
 ~~~
 
+<hr>
+
+<a name="schema5"></a>
+
 # 5 Añadimos el server
 ~~~js
 import fastify from "fastify";
@@ -61,6 +74,10 @@ const server = fastify({
 const PORT= 3000;
 server.listen(PORT)
 ~~~
+
+<hr>
+
+<a name="schema6"></a>
 
 # 6 Creamos app
 ~~~ js
@@ -142,6 +159,10 @@ export const main_app: FastifyPluginAsync =async (app) => {
 }
 ~~~
 
+<hr>
+
+<a name="schema7"></a>
+
 # 7 Creamos main_router
 ~~~js
 import { FastifyPluginAsync } from "fastify"
@@ -172,6 +193,10 @@ export const main_router:FastifyPluginAsync =async (app) => {
 
 ~~~
 
+<hr>
+
+<a name="schema8"></a>
+
 # 8 Creamos index.hbs y main.hbs
 - `index.hbs`
 ~~~html
@@ -189,8 +214,6 @@ Lo modificamos para poder coger los datos que nos entren al pulsar añadir
 <a href="/list/add">Añadir</a>
 ~~~
 
-
-
 - ` main.hbs`
 ~~~html
 <!DOCTYPE html>
@@ -207,6 +230,10 @@ Lo modificamos para poder coger los datos que nos entren al pulsar añadir
 </html>
 ~~~
 
+<hr>
+
+<a name="schema9"></a>
+
 # 9 Creamos add.hbs 
 ~~~html
 <h1>{{title}}</h1>
@@ -222,6 +249,9 @@ Lo modificamos para poder coger los datos que nos entren al pulsar añadir
 <a href="/">Back</a> 
 ~~~
 
+<hr>
+
+<a name="schema10"></a>
 
 # 10 Añadimos la funcionalidad `remove ingredient`
 - Modificamos `index.hbs`
@@ -297,6 +327,11 @@ export const main_router:FastifyPluginAsync =async (app) => {
     app.get("/remove",remove)
 }
 ~~~
+
+<hr>
+
+<a name="schema11"></a>
+
 # 11 Utilizamos `#with`de hadnlebars
 - Modificamos el `index.hbs`
 ~~~html
