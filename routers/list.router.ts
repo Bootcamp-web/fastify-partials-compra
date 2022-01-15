@@ -1,5 +1,5 @@
 import {FastifyPluginAsync} from "fastify"
-import { request } from "http"
+
 
  
 export let list= [
@@ -21,7 +21,7 @@ const form = (request: any, reply:any)=>{
     console.log(newItem)
     list.push(newItem)
     cont++
-    reply.redirect("add");
+    reply.redirect("/");
 
 }
 export  const list_router: FastifyPluginAsync  = async(app)=>{

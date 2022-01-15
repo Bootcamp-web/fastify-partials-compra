@@ -17,6 +17,13 @@ export const main_app: FastifyPluginAsync =async (app) => {
             handlebars: require("handlebars"),
         },
         layout: "./views/layouts/main.hbs",
+        options:{
+            partials:{
+                ingredientes:'/views/partials/ingrediente.hbs',
+                menu:'views/partials/menu.hbs',
+                add_ingredient:'views/partials/forms/add_ingredient.hbs'
+            }
+        }
     });
     app.register(formBodyPlugin);
     app.register(main_router);

@@ -10,6 +10,8 @@
 1. [Creamos add.hbs  ](#schema9)
 1. [Añadimos la funcionalidad `remove ingredient` ](#schema10)
 1. [Utilizamos `#with`de hadnlebars](#schema11)
+1. [Partials](#schema12)
+1. [Utilizamos `#with`de hadnlebars](#schema11)
 <hr>
 
 <a name="schema1"></a>
@@ -359,4 +361,303 @@ export const main_router:FastifyPluginAsync =async (app) => {
      
    </div>
 {{/if}}
+~~~
+
+<hr>
+
+<a name="schema12"></a>
+
+# 12 Partials
+Partials inserta código html de forma rápida y sin duplicar código.
+- Añadimos algo de `boostrap` a `main.hbs`
+~~~html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link
+			href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+			rel="stylesheet"
+			integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
+			crossorigin="anonymous"
+		/>
+		<script
+			src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"
+			integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB"
+			crossorigin="anonymous"
+		></script>
+		<script
+			src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"
+			integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13"
+			crossorigin="anonymous"
+		></script>
+		<title>Document</title>
+	</head>
+<body>
+    {{{body}}}
+</body>
+</html>
+~~~
+- Creamos el partial `ingrediente.hbs`
+~~~html
+<div class="card" style="margin: 10px">
+	{{!-- <img src="/staticFiles/img/{{img}}" class="card-img-top" alt="..." /> --}}
+	<div class="card-body">
+		<h5 class="card-title">{{ingrediente}}</h5>
+		<p class="card-text">Cantidad: {{cantidad}}</p>
+		<a href="/remove?id={{id}}" class="btn btn-primary">Delete ingredient</a>
+	</div>
+</div>
+~~~
+- Modificamos  `app.ts` para añadirle los partialls
+~~~js
+export const main_app: FastifyPluginAsync =async (app) => {
+    app.register(fastifyStatic,{
+        root: path.join(__dirname, "../public"),
+        prefix:"/staticFiles",
+    });
+    app.register(pointOfView, 
+    {
+        engine: {
+            handlebars: require("handlebars"),
+        },
+        layout: "./views/layouts/main.hbs",
+        options:{
+            partials:{
+                ingrediente:'/views/partials/ingrediente.hbs'
+            }
+        }
+    });
+    app.register(formBodyPlugin);
+    app.register(main_router);
+    app.register(list_router, { prefix: "/list" });
+}
+~~~
+- Camiamos el `index.hbs` para utilizar el partials de ingrediente
+~~~html
+<h1>{{title}}</h1>
+<div class = 'row' style="margin-top:50px">
+        {{#each list}}
+            {{#with this}}
+                <div class = "row-4">{{>ingredientes}}</div> 
+            {{/with}}
+        {{/each}}
+    
+</div>
+
+<a href="/list/add">Añadir</a>
+
+{{#if list.length}} 
+    <h2>Theres are {{list.length}} in the list</h2>
+   <div>
+       <h3>The most important is</h3>
+        <div class = "row-4">{{>ingredientes list.[0]}}</div>    
+   </div>
+{{/if}}
+~~~
+
+<hr>
+
+<a name="schema13"></a>
+
+# 13 Hacemos un menú con Partials
+- Creamos el `menu.hbs`
+~~~html
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+	<div class="container-fluid">
+		<a class="navbar-brand" href="#">Recetas made in Spain 🇪🇸</a>
+		<button
+			class="navbar-toggler"
+			type="button"
+			data-bs-toggle="collapse"
+			data-bs-target="#navbarSupportedContent"
+			aria-controls="navbarSupportedContent"
+			aria-expanded="false"
+			aria-label="Toggle navigation"
+		>
+			<span class="navbar-toggler-icon"></span>
+		</button>
+		<div class="collapse navbar-collapse" id="navbarSupportedContent">
+			<ul class="navbar-nav me-auto mb-2 mb-lg-0">
+				<li class="nav-item">
+					<a class="nav-link active" aria-current="page" href="#">Home</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="list/add">Añadir ingrediente</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="#">Borrar todos</a>
+				</li>
+			</ul>
+		</div>
+	</div>
+</nav>
+~~~
+- Modificamos el archiv `main.hbs` le añadimos el partial `menu.hbs`
+~~~html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link
+			href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+			rel="stylesheet"
+			integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
+			crossorigin="anonymous"
+		/>
+		<script
+			src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"
+			integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB"
+			crossorigin="anonymous"
+		></script>
+		<script
+			src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"
+			integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13"
+			crossorigin="anonymous"
+		></script>
+		<title>Document</title>
+	</head>
+<body>
+    <section class="container">
+			{{>menu}}
+			{{{body}}}
+		</section>
+    
+</body>
+</html>
+~~~
+- Añadimos el partial  menu en `app.ts`
+~~~js
+export const main_app: FastifyPluginAsync =async (app) => {
+    app.register(fastifyStatic,{
+        root: path.join(__dirname, "../public"),
+        prefix:"/staticFiles",
+    });
+    app.register(pointOfView, 
+    {
+        engine: {
+            handlebars: require("handlebars"),
+        },
+        layout: "./views/layouts/main.hbs",
+        options:{
+            partials:{
+                ingredientes:'/views/partials/ingrediente.hbs',
+                menu:'views/partials/menu.hbs'
+            }
+        }
+    });
+    app.register(formBodyPlugin);
+    app.register(main_router);
+    app.register(list_router, { prefix: "/list" });
+}
+~~~
+
+# 14 Creamos un partial para los formularios
+- Creamos dentro de la carpeta `partials` una carpeta llamada `forms` y dentro de esta archivo `add_ingrediente.hbs`. Quitamos toda la parte de form del archivo `add.hbs`.
+Quedando `add.hbs`
+~~~html
+<h1>{{title}}</h1>
+
+<div>{{>add_ingredient}}</div>
+
+~~~
+Y `add_ingredients.hbs` así: 
+~~~html
+<form action = "/list/form" method="POST">
+	<p>Ingrediente:</p>
+	<input name="ingrediente" />
+	<p>Cantidad</p>
+	<input name="cantidad" />
+	<p></p>
+	<button type="submit">Añadir</button>
+</form>
+<a href="/">Back</a> 
+~~~
+- Modificamos el archivo ``app.ts` añadiendo el partial nuevo
+~~~ts
+export const main_app: FastifyPluginAsync =async (app) => {
+    app.register(fastifyStatic,{
+        root: path.join(__dirname, "../public"),
+        prefix:"/staticFiles",
+    });
+    app.register(pointOfView, 
+    {
+        engine: {
+            handlebars: require("handlebars"),
+        },
+        layout: "./views/layouts/main.hbs",
+        options:{
+            partials:{
+                ingredientes:'/views/partials/ingrediente.hbs',
+                menu:'views/partials/menu.hbs',
+                add_ingrediente:'views/partials/forms/add_ingrediente.hbs'
+            }
+        }
+    });
+    app.register(formBodyPlugin);
+    app.register(main_router);
+    app.register(list_router, { prefix: "/list" });
+~~~
+- Añadimos `add_ingredient` también en el ìndex.hbs`
+~~~html
+<h1>{{title}}</h1>
+<div class = 'row' style="margin-top:50px">
+        {{#each list}}
+            {{#with this}}
+                <div class = "row-4">{{>ingredientes}}</div> 
+            {{/with}}
+        {{/each}}
+    
+</div>
+
+<a href="/list/add">Añadir</a>
+
+{{#if list.length}} 
+    <h2>Theres are {{list.length}} in the list</h2>
+   <div>
+       <h3>The most important is</h3>
+        <div class = "row-4">{{>ingredientes list.[0]}}</div>    
+   </div>
+   <h1>{{title}}</h1>
+    <h2>Añadir ingrediente</h2>
+    {{>add_ingredient}}
+{{/if}}
+~~~
+
+- Cambiamos `list_router.ts` para que al añadir ingrediente nos lleve a la `home`
+~~~js
+import {FastifyPluginAsync} from "fastify"
+
+
+ 
+export let list= [
+    {ingrediente:"Papas", cantidad:3,id:0 },
+    {ingrediente:"Cebollas",cantidad:6,id:1},
+    {ingrediente:"Huevos",cantidad:6,id:2},
+]
+let cont = 3;
+const add = (request: any, reply:any)=>{
+    const data ={title: "Add items to your shopping list"}
+    
+    reply.view("views/add",data)
+}
+
+const form = (request: any, reply:any)=>{
+    const { ingrediente, cantidad } = request.body;
+   
+    const newItem = { ingrediente, cantidad,id:cont }
+    console.log(newItem)
+    list.push(newItem)
+    cont++
+    reply.redirect("/");
+
+}
+export  const list_router: FastifyPluginAsync  = async(app)=>{
+    app.post("/form",form)
+    app.get("/add",add)
+}
 ~~~
